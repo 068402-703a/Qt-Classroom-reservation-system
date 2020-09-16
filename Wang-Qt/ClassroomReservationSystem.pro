@@ -30,4 +30,5 @@ SOURCES += \
 HEADERS += \
     registerinterface.h
 
-FORMS +=
+FORMS += \
+    registerinterface.ui
