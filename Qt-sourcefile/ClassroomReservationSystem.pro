@@ -25,10 +25,28 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
         main.cpp \
-    registerinterface.cpp
+    studentwindow.cpp \
+    registerinterface.cpp \
+    teacherwindow.cpp \
+    student.cpp \
+    teacher.cpp \
+    manager.cpp \
+    orderfile.cpp \
+    managerwindow.cpp
 
 HEADERS += \
-    registerinterface.h
+    studentwindow.h \
+    registerinterface.h \
+    computerroom.h \
+    teacherwindow.h \
+    student.h \
+    teacher.h \
+    manager.h \
+    orderfile.h \
+    managerwindow.h
 
 FORMS += \
-    registerinterface.ui
+    studentwindow.ui \
+    registerinterface.ui \
+    teacherwindow.ui \
+    managerwindow.ui
