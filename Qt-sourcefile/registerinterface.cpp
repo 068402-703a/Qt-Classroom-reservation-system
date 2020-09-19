@@ -199,6 +199,7 @@ void RegisterInterface::LoginIn(QString fileName, int type)
                        delete stuWindow;
                         stuWindow=NULL;
                         delete stu;
+
                     });
 
                 } //老师身份成功登录
@@ -221,6 +222,7 @@ void RegisterInterface::LoginIn(QString fileName, int type)
                        delete teaWindow;
                         teaWindow=NULL;
                         delete tea;
+
                     });
 
                 } else //管理员身份成功登录
@@ -243,6 +245,7 @@ void RegisterInterface::LoginIn(QString fileName, int type)
                        delete manWindow;
                         manWindow=NULL;
                         delete man;
+
                     });
 
                     }
