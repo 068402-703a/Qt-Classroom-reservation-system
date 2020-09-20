@@ -92,7 +92,7 @@ void RegisterInterface::createManagerInfo()
             exit(0);
         }
         QTextStream out(&tempFile);
-        out << "manager1" <<"&"<< "123"<<"\n";
+        out << "123" <<"&"<< "123"<<"\n";
 
         tempFile.close();
     }

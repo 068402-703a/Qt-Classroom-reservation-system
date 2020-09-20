@@ -32,6 +32,7 @@ StudentWindow::StudentWindow(Student* stu,QWidget *parent) :
     });
     //点击预约机房按钮，进到预约机房界面
     connect(ui->reservepushButton,&QPushButton::clicked,[=](){
+        ui->computerroom1radioButton->setChecked(true);
         ui->stackedWidget->setCurrentIndex(1);
     });
     //配置预约周几的下拉框
@@ -52,17 +53,17 @@ StudentWindow::StudentWindow(Student* stu,QWidget *parent) :
     });
     //在申请预约界面点击查看我的预约按钮完成对我的预约的查看
     connect(ui->checkMyresepushButton,&QPushButton::clicked,[=](){
-        of=new OrderFile;
+
        showMyOrder(of,stu);
     });
     //在申请预约界面点击查看所有预约按钮完成对所有预约的查看
     connect(ui->checkallrespushButton,&QPushButton::clicked,[=](){
-        of=new OrderFile;
+
        showAllOrder(of);
     });
     //在学生主界面点击取消预约按钮去到取消预约的界面
     connect(ui->cancelpushButton,&QPushButton::clicked,[=](){
-          of = new OrderFile;
+
         configCancelOrder(of,stu);
     });
     //在取消预约界面选择返回按钮就返回学生主界面
@@ -118,69 +119,131 @@ void StudentWindow::applyOrder(Student* stu)
         {
             room=3;
         }
-      QMessageBox msgBox;
-
-        msgBox.setText("预约成功！请等待审核" );
-        msgBox.exec();
-        //相当于预约完一次后就回到主界面
-        ui->stackedWidget->setCurrentIndex(0);
-        QFile ofs("order.txt");
-        if(!ofs.open(QIODevice::WriteOnly|QIODevice::Append|QIODevice::Text))
-        {
-            msgBox.setIcon(QMessageBox::Critical);
-            msgBox.setText("打开文件失败");
-            msgBox.exec();
-            exit(0);
-        }
-        QTextStream out(&ofs);
         QString status="审核中";
-        out << date << " "<< interval << " "<< stu->m_Name << " "<< room << " "<<status<<"\n";
-        ofs.close();
+        QString s= date + " "+ interval + " "+ stu->m_Name + " "+ QString::number(room) + " "+status;
+
+        QFile ifs;
+
+         bool flag=false;
+         if(ifs.exists("order.txt"))
+         {
+             ifs.setFileName("order.txt");
+             QMessageBox msgBox;
+
+                  if (!ifs.open(QIODevice::ReadOnly | QIODevice::Text))
+                  {
+                      msgBox.setIcon(QMessageBox::Critical);
+                      msgBox.setText("打开文件失败");
+                      msgBox.exec();
+                      exit(0);
+                  }
+
+
+
+                  QTextStream in(&ifs);
+                  while (!in.atEnd()) {
+                      QString line = in.readLine();
+
+                      if(s==line)
+                      {
+                          flag=true;
+                          break;
+                      }
+
+                  }
+
+         }
+
+             QMessageBox msgBox;
+             if(flag)
+             {
+                 msgBox.setText("你已申请过相同的预约,无法再申请" );
+                 msgBox.exec();
+             }
+             else
+             j{
+
+                 msgBox.setText("预约成功！请等待审核" );
+                 msgBox.exec();
+                 //相当于预约完一次后就回到主界面
+                 ui->stackedWidget->setCurrentIndex(0);
+                 QFile ofs("order.txt");
+                 if(!ofs.open(QIODevice::WriteOnly|QIODevice::Append|QIODevice::Text))
+                 {
+                     msgBox.setIcon(QMessageBox::Critical);
+                     msgBox.setText("打开文件失败");
+                     msgBox.exec();
+                     exit(0);
+                 }
+                 QTextStream out(&ofs);
+
+                 out << date << " "<< interval << " "<< stu->m_Name << " "<< room << " "<<status<<"\n";
+                 ofs.close();
+             }
+
+
+
 }
 //查看自身预约
 void StudentWindow::showMyOrder(OrderFile*of,Student* stu)
 {
-    QMainWindow * wid = new QMainWindow(this);
-    wid->setWindowTitle("我的预约信息");
-    wid->setFixedSize(800,500);
-    QTextEdit * edit = new QTextEdit(wid);
-    edit->setFixedSize(wid->width(),wid->height());
+    QFile ex;
+    QMessageBox msgBox;
+    if(!ex.exists("order.txt"))
+    {
+        msgBox.setIcon(QMessageBox::Information);
+        msgBox.setText("无预约记录");
+        msgBox.exec();
+    }
+    else
+    {
+        of=new OrderFile;
+        QMainWindow * wid = new QMainWindow(this);
+        wid->setWindowTitle("我的预约信息");
+        wid->setFixedSize(800,500);
+        QTextEdit * edit = new QTextEdit(wid);
+        edit->setFixedSize(wid->width(),wid->height());
 
-        QMessageBox msgBox;
 
-            QString s;
-            bool flag=false;
-            for (int i = 0; i < of->m_Size; i++)
-            {
-                if (stu->m_Name == of->m_orderData[i][2]) //找到自身预约
+
+                QString s;
+                bool flag=false;
+                for (int i = 0; i < of->m_Size; i++)
                 {
-                    flag=true;
-                    s="预约日期："+ of->m_orderData[i][0] + "| 时间段:"+of->m_orderData[i][1]+" | 机房编号:"+of->m_orderData[i][3]+" | 预约状态:"+of->m_orderData[i][4]+"\n";
-                    edit->append(s);
-                    s="*****************************************************************\n";
-                    edit->append(s);
+                    if (stu->m_Name == of->m_orderData[i][2]) //找到自身预约
+                    {
+                        flag=true;
+                        s="预约日期："+ of->m_orderData[i][0] + "| 时间段:"+of->m_orderData[i][1]+" | 机房编号:"+of->m_orderData[i][3]+" | 预约状态:"+of->m_orderData[i][4]+"\n";
+                        edit->append(s);
+                        s="*******************************************************\n";
+                        edit->append(s);
+                    }
                 }
-            }
-            if(flag)
-            {
-                QFont fon;
-                fon.setFamily("华文新魏");
-                fon.setPointSize(15);
-                edit->setFont(fon);
-                wid->show();
-                edit->show();
+                if(flag)
+                {
+                    QFont fon;
+                    fon.setFamily("华文新魏");
+                    fon.setPointSize(15);
+                    edit->setFont(fon);
+                     edit->setReadOnly(true);
+                    wid->show();
+                    edit->show();
 
 
-            }
-            else
-            {
-                msgBox.setIcon(QMessageBox::Information);
-                msgBox.setText("无预约记录");
-                msgBox.exec();
-            }
+                }
+                else
+                {
+                    msgBox.setIcon(QMessageBox::Information);
+                    msgBox.setText("无预约记录");
+                    msgBox.exec();
+                }
 
-        delete of;
-        of=NULL;
+            delete of;
+            of=NULL;
+
+
+    }
+
 
 }
 void StudentWindow::CancelOrder(OrderFile*of,Student* stu)
@@ -224,44 +287,59 @@ void StudentWindow::CancelOrder(OrderFile*of,Student* stu)
 //取消预约
 void StudentWindow::configCancelOrder( OrderFile  * of,Student* stu)
 {
+    QMessageBox msgBox;
+    QFile ex;
 
-        QMessageBox msgBox;
+    if(!ex.exists("order.txt"))
+    {
+        msgBox.setIcon(QMessageBox::Information);
+        msgBox.setText("无预约记录");
+        msgBox.exec();
+    }
+    else
+    {
+        of = new OrderFile;
 
-            int index = 1;
-            QString s;
-            for (int i = 0; i < of->m_Size; i++)
-            {
-                //先判断是自身学号
-                if (stu->m_Name== of->m_orderData[i][2])
-                {
-                    //再筛选状态  审核中或预约成功
-                    if (of->m_orderData[i][4] == "审核中" || of->m_orderData[i][4] == "预约成功")
-                    {
 
-                        s.append(QString::number(index));
+          int index = 1;
+          QString s;
+          for (int i = 0; i < of->m_Size; i++)
+          {
+              //先判断是自身学号
+              if (stu->m_Name== of->m_orderData[i][2])
+              {
+                  //再筛选状态  审核中或预约成功
+                  if (of->m_orderData[i][4] == "审核中" || of->m_orderData[i][4] == "预约成功")
+                  {
 
-                        index++;
-                        QString t = ": 预约日期:"+of->m_orderData[i][0]+" | 时间段:"+of->m_orderData[i][1]+" | 机房编号:"+of->m_orderData[i][3]+" | 状态:"+of->m_orderData[i][4]+"\n";
-                        s.append(t);
-                       ui->textEdit->append(s);
-                       s.clear();
-                    }
-                }
-            }
+                      s.append(QString::number(index));
 
-            if(index==1)
-            {
-                msgBox.setIcon(QMessageBox::Information);
-                msgBox.setText("无可以取消的预约记录");
-                msgBox.exec();
-                delete of;
-                of=NULL;
-            }
-            else
-            {
-                //只有在有可以取消的预约记录情况下才显示页面
-                ui->stackedWidget->setCurrentIndex(2);
-            }
+                      index++;
+                      QString t = ": 预约日期:"+of->m_orderData[i][0]+" | 时间段:"+of->m_orderData[i][1]+" | 机房编号:"+of->m_orderData[i][3]+" | 状态:"+of->m_orderData[i][4]+"\n";
+                      s.append(t);
+                     ui->textEdit->append(s);
+                     s.clear();
+                  }
+              }
+          }
+
+          if(index==1)
+          {
+              msgBox.setIcon(QMessageBox::Information);
+              msgBox.setText("无可以取消的预约记录");
+              msgBox.exec();
+              delete of;
+              of=NULL;
+          }
+          else
+          {
+              //只有在有可以取消的预约记录情况下才显示页面
+              ui->stackedWidget->setCurrentIndex(2);
+          }
+
+
+    }
+
 
 
 
@@ -272,39 +350,55 @@ void StudentWindow::configCancelOrder( OrderFile  * of,Student* stu)
 //查看所有预约
 void StudentWindow::showAllOrder(OrderFile*of)
 {
+
+    QFile ex;
     QMessageBox msgBox;
-    QMainWindow * wid = new QMainWindow(this);
-    wid->setWindowTitle("所有预约信息");
-    wid->setFixedSize(800,500);
-    QTextEdit * edit = new QTextEdit(wid);
-    edit->setFixedSize(wid->width(),wid->height());
-    if (of->m_Size == 0)
+    if(!ex.exists("order.txt"))
     {
         msgBox.setIcon(QMessageBox::Information);
         msgBox.setText("无预约记录");
         msgBox.exec();
-
     }
     else
     {
-        QString s;
-        for (int i = 0; i < of->m_Size; i++)
-        {
-            s="预约日期："+ of->m_orderData[i][0] + " | 时间段:"+of->m_orderData[i][1]+" | 学号:"+of->m_orderData[i][2]+" | 机房号:"+of->m_orderData[i][3]+" | 预约状态:"+of->m_orderData[i][4]+"\n";
-            edit->append(s);
-            s="***********************************************************************\n";
-            edit->append(s);
-        }
-        QFont fon;
-        fon.setFamily("华文新魏");
-        fon.setPointSize(15);
-        edit->setFont(fon);
-        wid->show();
-        edit->show();
+
+        of=new OrderFile;
+       QMessageBox msgBox;
+       QMainWindow * wid = new QMainWindow(this);
+       wid->setWindowTitle("所有预约信息");
+       wid->setFixedSize(800,500);
+       QTextEdit * edit = new QTextEdit(wid);
+       edit->setFixedSize(wid->width(),wid->height());
+       if (of->m_Size == 0)
+       {
+           msgBox.setIcon(QMessageBox::Information);
+           msgBox.setText("无预约记录");
+           msgBox.exec();
+
+       }
+       else
+       {
+           QString s;
+           for (int i = 0; i < of->m_Size; i++)
+           {
+               s="预约日期："+ of->m_orderData[i][0] + " | 时间段:"+of->m_orderData[i][1]+" | 学号:"+of->m_orderData[i][2]+" | 机房号:"+of->m_orderData[i][3]+" | 预约状态:"+of->m_orderData[i][4]+"\n";
+               edit->append(s);
+               s="****************************************************\n";
+               edit->append(s);
+           }
+           QFont fon;
+           fon.setFamily("华文新魏");
+           fon.setPointSize(15);
+           edit->setFont(fon);
+            edit->setReadOnly(true);
+           wid->show();
+           edit->show();
+       }
+
+        delete of;
+          of=NULL;
     }
 
-     delete of;
-       of=NULL;
 
 }
 StudentWindow::~StudentWindow()

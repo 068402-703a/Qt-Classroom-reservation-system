@@ -15,7 +15,6 @@ Manager::Manager(QString name, QString pwd)
     //初始化管理员信息
     this->m_Name = name;
     this->m_Pwd = pwd;
-
     //初始化容器 获取到所有文件中 学生、老师信息
     this->initVector();  
     //初始化机房信息,如果机房信息文件还不存在,就先创建并初始化
@@ -96,48 +95,57 @@ void Manager::initVector()
     vStu.clear();
     vTea.clear();
     QMessageBox msgBox;
-    //读取信息   学生
-    QFile ifs("student.txt");
-    if(!ifs.open(QIODevice::ReadOnly|QIODevice::Text))
+    QFile ex;
+    if(ex.exists("student.txt"))
     {
-        msgBox.setIcon(QMessageBox::Critical);
-        msgBox.setText("打开文件失败");
-        msgBox.exec();
+        //读取信息   学生
+        QFile ifs("student.txt");
+        if(!ifs.open(QIODevice::ReadOnly|QIODevice::Text))
+        {
+            msgBox.setIcon(QMessageBox::Critical);
+            msgBox.setText("打开文件失败");
+            msgBox.exec();
+        }
+        Student * s;
+        QTextStream in(&ifs);
+             while (!in.atEnd()) {
+                 s=new Student;
+                 QString line = in.readLine();
+
+                 QStringList list = line.split('&',QString::SkipEmptyParts);
+                 s->m_Name=list[0];
+                 s->m_Pwd=list[1];
+                 vStu.push_back(s);
+             }
+                ifs.close();
     }
-    Student * s;
-    QTextStream in(&ifs);
-         while (!in.atEnd()) {
-             s=new Student;
-             QString line = in.readLine();
-
-             QStringList list = line.split('&',QString::SkipEmptyParts);
-             s->m_Name=list[0];
-             s->m_Pwd=list[1];
-             vStu.push_back(s);
-         }
-            ifs.close();
 
 
-    //读取信息   老师
-           QFile ofs("teacher.txt");
-            if(!ofs.open(QIODevice::ReadOnly|QIODevice::Text))
-            {
-                msgBox.setIcon(QMessageBox::Critical);
-                msgBox.setText("打开文件失败");
-                msgBox.exec();
-            }
-            Teacher* t;
-            QTextStream on(&ofs);
-                 while (!on.atEnd()) {
-                     t=new Teacher;
-                     QString line = on.readLine();
 
-                     QStringList list = line.split('&',QString::SkipEmptyParts);
-                     t->m_Name=list[0];
-                     t->m_Pwd=list[1];
-                     vTea.push_back(t);
-                 }
-            ofs.close();
+    if(ex.exists("teacher.txt"))
+    {
+        //读取信息   老师
+               QFile ofs("teacher.txt");
+                if(!ofs.open(QIODevice::ReadOnly|QIODevice::Text))
+                {
+                    msgBox.setIcon(QMessageBox::Critical);
+                    msgBox.setText("打开文件失败");
+                    msgBox.exec();
+                }
+                Teacher* t;
+                QTextStream on(&ofs);
+                     while (!on.atEnd()) {
+                         t=new Teacher;
+                         QString line = on.readLine();
+
+                         QStringList list = line.split('&',QString::SkipEmptyParts);
+                         t->m_Name=list[0];
+                         t->m_Pwd=list[1];
+                         vTea.push_back(t);
+                     }
+                ofs.close();
+    }
+
 }
 
 //检测重复 参数1 检测学号/职工号  参数2  检测类型

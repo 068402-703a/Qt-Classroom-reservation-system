@@ -205,6 +205,7 @@ void ManagerWindow::showComputer(Manager * man)
     QFont fon;
     fon.setFamily("华文新魏");
     fon.setPointSize(15);
+    edit->setReadOnly(true);
     edit->setFont(fon);
      edit->append(s);
      wid->show();
@@ -219,34 +220,60 @@ void ManagerWindow::showPerson(Manager * man,int type)
     wid->setFixedSize(800,500);
     QTextEdit * edit = new QTextEdit(wid);
     edit->setFixedSize(wid->width(),wid->height());
+    QMessageBox msg;
      QString s;
+     bool flag=false;
         if (type == 0)
         {
             //查看学生
+            if(man->vStu.size()==0)
+            {
 
+                msg.setText("目前还没有学生的信息!!");
+                msg.exec();
 
+            }
+            else
+            {
+                flag=true;
               foreach ( Student* str, man->vStu) {
                   s.append(man->printStudent(str));
               }
-
+            }
 
         }
         else
         {
-            //查看老师
-            foreach ( Teacher* tea, man->vTea) {
-                s.append(man->printTeacher(tea));
+            if(man->vTea.size()==0)
+            {
+
+                msg.setText("目前还没有老师的信息!!");
+                msg.exec();
+            }
+            else
+            {
+                flag=true;
+                //查看老师
+                foreach ( Teacher* tea, man->vTea) {
+                    s.append(man->printTeacher(tea));
+                }
             }
 
 
+
         }
-        QFont fon;
-        fon.setFamily("华文新魏");
-        fon.setPointSize(15);
-        edit->setFont(fon);
-       edit->append(s);
-        wid->show();
-        edit->show();
+        if(flag)
+        {
+            QFont fon;
+            fon.setFamily("华文新魏");
+            fon.setPointSize(15);
+            edit->setFont(fon);
+           edit->append(s);
+            edit->setReadOnly(true);
+            wid->show();
+            edit->show();
+        }
+
 
 }
 ManagerWindow::~ManagerWindow()

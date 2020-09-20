@@ -30,6 +30,8 @@ public:
     bool checkRepeat(QString name , int type);
     //在机房信息文件还不存在时创建机房文件并给一定的初始信息
    void creatComputerRoom();
+   //删除账号的功能
+
 
     //学生容器
     QVector<Student*>vStu;

@@ -1,8 +1,5 @@
 <RCC>
     <qresource prefix="/new/prefix1">
-        <file>images/computerRoomsSystem4.jpg</file>
-        <file>images/computerRoomSystem1.jpg</file>
         <file>images/computerRoomSystem2.jpg</file>
-        <file>images/computerRoomSystem3.jpg</file>
     </qresource>
 </RCC>
