@@ -15,11 +15,6 @@ public: //默认构造
     Teacher( QString name, QString pwd);
 
 
-    //查看所有预约
-    void showAllOrder();
-
-    //审核预约
-    void validOrder();
    QString m_Name;
    QString m_Pwd;
 

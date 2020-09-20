@@ -3,6 +3,7 @@
 #include <QPainter>
 #include <QFont>
 #include <QFile>
+#include <QPixmap>
 #include <QMessageBox>
 #include <QTextStream>
 #include "student.h"
@@ -31,6 +32,9 @@ RegisterInterface::RegisterInterface(QWidget *parent) :
 
 
     });
+    //一开始将按钮选中到学生界面
+     ui->studentButton->setChecked(true);
+     ui->stackedWidget->setCurrentIndex(0);
     //为学号输入框设置提示
     ui->XuehaoLineEdit->setPlaceholderText("请输入学号");
     //为职工号输入框设置提示
@@ -41,8 +45,7 @@ RegisterInterface::RegisterInterface(QWidget *parent) :
     ui->stupassWordlineEdit1->setPlaceholderText("请输入密码");
     ui->teapasswordLineEdit2->setPlaceholderText("请输入密码");
     ui->adminpassWordlineEdit3->setPlaceholderText("请输入密码");
-    //一开始将按钮选中到学生界面
-     ui->studentButton->setChecked(true);
+
     //连接学生按钮与学生登录信息输入框
     connect(ui->studentButton,&QRadioButton::clicked,[=](){
        ui->stackedWidget->setCurrentIndex(0);
@@ -97,16 +100,17 @@ void RegisterInterface::createManagerInfo()
 }
 void RegisterInterface::paintEvent(QPaintEvent *event)
 {
+
+
     QPainter painter(this);
-    QFont font;
-    font.setFamily("华文新魏");
-    font.setPointSize(26);
-    painter.setFont(font);
-    QString str = QString("欢迎登录机房预约系统");
-    //绘制文字
-    QFontMetrics metrics(font);
-    int charWidth = metrics.width(str);//得到键的宽度
-    painter.drawText(QRect((this->width()-charWidth)/2, this->height()*0.1,500, 50),str);
+    //创建QPixmap对象
+    QPixmap pix;
+    //加载图片
+    pix.load(":/new/prefix1/images/computerRoomSystem2.jpg");
+    //绘制背景图
+    painter.drawPixmap(0,0,this->width(),this->height(),pix);
+
+
 }
 RegisterInterface::~RegisterInterface()
 {
@@ -192,9 +196,11 @@ void RegisterInterface::LoginIn(QString fileName, int type)
                     ui->stupassWordlineEdit1->clear();
                     this->hide();
                     stuWindow=new StudentWindow(stu);
+                    stuWindow->setGeometry(this->geometry());
                     stuWindow->show();
                     //监听从学生界面返回的信号
                     connect(stuWindow,&StudentWindow::studentWindowBack,[=](){
+                        this->setGeometry(stuWindow->geometry());
                         this->show();
                        delete stuWindow;
                         stuWindow=NULL;
@@ -215,9 +221,12 @@ void RegisterInterface::LoginIn(QString fileName, int type)
                     this->hide();
                     //进入老师界面
                     teaWindow=new TeacherWindow(tea);
+                    teaWindow->setGeometry(this->geometry());
                     teaWindow->show();
                     //监听从老师界面返回的信号
                     connect(teaWindow,&TeacherWindow::teacherWindowBack,[=](){
+                        this->setGeometry(teaWindow->geometry());
+
                         this->show();
                        delete teaWindow;
                         teaWindow=NULL;
@@ -238,9 +247,11 @@ void RegisterInterface::LoginIn(QString fileName, int type)
                     //进入管理员界面
 
                     manWindow=new ManagerWindow(man);
+                    manWindow->setGeometry(this->geometry());
                     manWindow->show();
                     //监听从管理员界面返回的信号
                     connect(manWindow,&ManagerWindow::managerWindowBack,[=](){
+                        this->setGeometry(manWindow->geometry());
                         this->show();
                        delete manWindow;
                         manWindow=NULL;

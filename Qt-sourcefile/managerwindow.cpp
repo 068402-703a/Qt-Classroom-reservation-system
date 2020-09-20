@@ -3,6 +3,9 @@
 #include <QMessageBox>
 #include <QTextStream>
 #include <QTextEdit>
+#include <QFont>
+#include <QPixmap>
+#include <QPainter>
 ManagerWindow::ManagerWindow(Manager * man,QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::ManagerWindow)
@@ -11,6 +14,18 @@ ManagerWindow::ManagerWindow(Manager * man,QWidget *parent) :
     this->setFixedSize(800,500);
     this->setWindowTitle("欢迎登陆机房预约系统");
     ui->stackedWidget->setCurrentIndex(0);
+    ui->stackedWidget->setFixedSize(this->width(),this->height());
+    //设置按钮的大小
+    ui->addpersonpushButton->setFixedSize(200,60);
+    ui->checkPersonButton->setFixedSize(200,60);
+    ui->checkComroomButton->setFixedSize(200,60);
+    ui->exitButton->setFixedSize(200,60);
+    ui->cleanOrderButton->setFixedSize(200,60);
+    ui->confirmButton->setFixedSize(200,60);
+    ui->exitpushButton_2->setFixedSize(200,60);
+    ui->checkallstupushButton->setFixedSize(200,60);
+    ui->checkallteapushButton->setFixedSize(200,60);
+    ui->checkexitpushButton->setFixedSize(200,60);
     //点击注销登录按钮后返回主界面
     connect(ui->exitButton,&QPushButton::clicked,[=](){
         this->hide();
@@ -44,10 +59,10 @@ ManagerWindow::ManagerWindow(Manager * man,QWidget *parent) :
     connect(ui->exitpushButton_2,&QPushButton::clicked,[=](){
         ui->stackedWidget->setCurrentIndex(0);
     });
-    //点击查看账号信息界面返回的按钮返回管理员界面
-    connect(ui->exitcommandLinkButton,&QCommandLinkButton::clicked,[=](){
+    connect(ui->checkexitpushButton,&QPushButton::clicked,[=](){
         ui->stackedWidget->setCurrentIndex(0);
     });
+
     //点击查看所有学生按钮查看所有学生
     connect(ui->checkallstupushButton,&QPushButton::clicked,[=](){
         showPerson(man,0);
@@ -65,6 +80,16 @@ ManagerWindow::ManagerWindow(Manager * man,QWidget *parent) :
         cleanFile();
     });
 }
+ void ManagerWindow::paintEvent(QPaintEvent *event)
+ {
+     QPainter painter(this);
+     //创建QPixmap对象
+     QPixmap pix;
+     //加载图片
+     pix.load(":/new/prefix1/images/computerRoomSystem2.jpg");
+     //绘制背景图
+     painter.drawPixmap(0,0,this->width(),this->height(),pix);
+ }
 //清空预约记录
 void ManagerWindow::cleanFile()
 {
@@ -167,21 +192,23 @@ void ManagerWindow::addPerson(Manager * man)
 void ManagerWindow::showComputer(Manager * man)
 {
     QMainWindow * wid = new QMainWindow(this);
+    wid->setFixedSize(800,500);
     wid->setWindowTitle("机房信息");
-    wid->setFixedSize(320,500);
     QTextEdit * edit = new QTextEdit(wid);
     edit->setFixedSize(wid->width(),wid->height());
     QString s;
     QString t;
     foreach ( ComputerRoom com, man->vCom) {
-        t = QString("机房编号：%1 机房最大容量：%2").arg(com.m_ComId).arg(com.m_MaxNum);
+        t = QString("机房编号：%1 | 机房最大容量：%2\n").arg(com.m_ComId).arg(com.m_MaxNum);
         s.append(t);
     }
+    QFont fon;
+    fon.setFamily("华文新魏");
+    fon.setPointSize(15);
+    edit->setFont(fon);
      edit->append(s);
      wid->show();
      edit->show();
-
-
 
 }
 void ManagerWindow::showPerson(Manager * man,int type)
@@ -189,7 +216,7 @@ void ManagerWindow::showPerson(Manager * man,int type)
 
     QMainWindow * wid = new QMainWindow(this);
     wid->setWindowTitle("账号信息");
-    wid->setFixedSize(320,500);
+    wid->setFixedSize(800,500);
     QTextEdit * edit = new QTextEdit(wid);
     edit->setFixedSize(wid->width(),wid->height());
      QString s;
@@ -213,7 +240,10 @@ void ManagerWindow::showPerson(Manager * man,int type)
 
 
         }
-
+        QFont fon;
+        fon.setFamily("华文新魏");
+        fon.setPointSize(15);
+        edit->setFont(fon);
        edit->append(s);
         wid->show();
         edit->show();
