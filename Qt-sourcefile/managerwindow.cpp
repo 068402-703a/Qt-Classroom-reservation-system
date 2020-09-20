@@ -174,7 +174,7 @@ void ManagerWindow::showComputer(Manager * man)
     QString s;
     QString t;
     foreach ( ComputerRoom com, man->vCom) {
-        t = QString("机房编号：%1 机房最大容量：%2").arg(com.m_ComId).arg(com.m_MaxNum);
+        t = QString("机房编号：%1 机房最大容量：%2\n").arg(com.m_ComId).arg(com.m_MaxNum);
         s.append(t);
     }
      edit->append(s);

@@ -64,8 +64,8 @@ void Manager::creatComputerRoom()
         }
         QTextStream out(&tempFile);
         out << "1" <<"&"<< "50"<<"\n";
-        out << "2" <<"&"<< "70"<<"\n";
-        out << "3" <<"&"<< "100"<<"\n";
+        out << "2" <<"&"<< "50"<<"\n";
+        out << "3" <<"&"<< "50"<<"\n";
 
         tempFile.close();
 }
