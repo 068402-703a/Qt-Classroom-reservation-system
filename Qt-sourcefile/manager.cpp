@@ -40,7 +40,7 @@ Manager::Manager(QString name, QString pwd)
                QString line = in.readLine();
 
                QStringList list=line.split('&',QString::SkipEmptyParts);
-               qDebug()<<list[0];
+
                line=list[0];
                com.m_ComId=line.toInt();
                line=list[1];
@@ -64,6 +64,8 @@ void Manager::creatComputerRoom()
         }
         QTextStream out(&tempFile);
         out << "1" <<"&"<< "50"<<"\n";
+        out << "2" <<"&"<< "70"<<"\n";
+        out << "3" <<"&"<< "100"<<"\n";
 
         tempFile.close();
 }
@@ -126,7 +128,6 @@ void Manager::initVector()
             }
             Teacher* t;
             QTextStream on(&ofs);
-            int index=0;
                  while (!on.atEnd()) {
                      t=new Teacher;
                      QString line = on.readLine();
@@ -135,8 +136,6 @@ void Manager::initVector()
                      t->m_Name=list[0];
                      t->m_Pwd=list[1];
                      vTea.push_back(t);
-                     qDebug()<<"第"<<index<<"个";
-                     index++;
                  }
             ofs.close();
 }

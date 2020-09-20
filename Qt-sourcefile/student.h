@@ -17,20 +17,6 @@ public:
     //有参构造  参数：学号、姓名、密码
     Student(QString name,QString pwd);
 
-
-
-    //申请预约
-    void applyOrder();
-
-    //查看自身预约
-    void showMyOrder();
-
-    //查看所有预约
-    void showAllOrder();
-
-    //取消预约
-    void cancelOrder();
-
     //学生学号
     QString m_Name;
     //学生密码
