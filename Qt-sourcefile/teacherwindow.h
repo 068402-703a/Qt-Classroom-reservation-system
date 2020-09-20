@@ -20,6 +20,7 @@ public:
     //审核预约
     void configValidOrder(OrderFile * of);
     void ValidOrder(OrderFile * of);
+    void paintEvent(QPaintEvent *event);
     ~TeacherWindow();
 signals:
      void teacherWindowBack();

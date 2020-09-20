@@ -27,6 +27,7 @@ public:
     //取消预约
     void configCancelOrder( OrderFile  * of,Student* stu);
     void CancelOrder(OrderFile *of,Student* stu);
+    void paintEvent(QPaintEvent *event);
     ~StudentWindow();
 signals:
     void studentWindowBack();

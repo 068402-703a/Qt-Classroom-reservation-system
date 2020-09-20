@@ -50,3 +50,6 @@ FORMS += \
     registerinterface.ui \
     teacherwindow.ui \
     managerwindow.ui
+
+RESOURCES += \
+    images.qrc

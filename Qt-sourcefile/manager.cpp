@@ -73,13 +73,13 @@ void Manager::creatComputerRoom()
 
 QString Manager::printStudent(Student * t)
 {
-    QString s =QString("学号：%1  密码：%2\n").arg(t->m_Name).arg(t->m_Pwd);
+    QString s =QString("学号：%1 | 密码：%2\n").arg(t->m_Name).arg(t->m_Pwd);
     return s;
 
 }
 QString Manager::printTeacher(Teacher * t)
 {
-    QString s =QString("职工号：%1  密码：%2\n").arg(t->m_Name).arg(t->m_Pwd);
+    QString s =QString("职工号：%1 | 密码：%2\n").arg(t->m_Name).arg(t->m_Pwd);
     return s;
 }
 

@@ -22,6 +22,7 @@ public:
     void showComputer(Manager * man);
     //清空预约记录
     void cleanFile();
+    void paintEvent(QPaintEvent *event);
 signals:
 
    void managerWindowBack();
