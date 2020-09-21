@@ -214,7 +214,7 @@ void RegisterInterface::LoginIn(QString fileName, int type)
 
                     msgBox.setText("老师验证登录成功！");
                     msgBox.exec();
-                   
+
                     //登录成功后就清空输入框中的内容
                     ui->tealineEdit->clear();
                     ui->teapasswordLineEdit2->clear();
@@ -230,7 +230,8 @@ void RegisterInterface::LoginIn(QString fileName, int type)
                         this->show();
                        delete teaWindow;
                         teaWindow=NULL;
-                       
+
+
                     });
 
                 } else //管理员身份成功登录

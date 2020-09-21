@@ -1,14 +1,11 @@
 #ifndef MANAGER_H
 #define MANAGER_H
-
 #include <QObject>
 #include <QString>
 #include <QFile>
-
 #include <QVector>
 #include "student.h"
 #include "teacher.h"
-//#include <algorithm>
 #include "computerRoom.h"
 class Manager : public QObject
 {
@@ -30,9 +27,6 @@ public:
     bool checkRepeat(QString name , int type);
     //在机房信息文件还不存在时创建机房文件并给一定的初始信息
    void creatComputerRoom();
-   //删除账号的功能
-
-
     //学生容器
     QVector<Student*>vStu;
 
@@ -41,6 +35,7 @@ public:
 
     //机房信息容器
     QVector<ComputerRoom>vCom;
+    //管理员的用户名和密码
     QString m_Name ;
     QString m_Pwd ;
 
