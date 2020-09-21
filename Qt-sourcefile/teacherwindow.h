@@ -15,7 +15,7 @@ class TeacherWindow : public QMainWindow
 
 public:
     OrderFile * of=NULL;
-    explicit TeacherWindow(Teacher * tea,QWidget *parent = 0);
+    explicit TeacherWindow(QWidget *parent = 0);
     void showAllOrder(OrderFile * of);
     //审核预约
     void configValidOrder(OrderFile * of);

@@ -8,7 +8,7 @@
 #include <QPainter>
 #include <QPixmap>
 #include <QDebug>
-TeacherWindow::TeacherWindow(Teacher * tea,QWidget *parent) :
+TeacherWindow::TeacherWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::TeacherWindow)
 {
