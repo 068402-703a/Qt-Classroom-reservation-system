@@ -175,13 +175,7 @@ void  TeacherWindow::showAllOrder(OrderFile * of)
              //一旦审核完毕就将界面返回到老师主界面，并将文本框中的内容清空
              ui->stackedWidget->setCurrentIndex(0);
              ui->textEdit->clear();
-
-
-
-
-
            }
-
 
  }
  void TeacherWindow::paintEvent(QPaintEvent *event)
@@ -197,9 +191,6 @@ void  TeacherWindow::showAllOrder(OrderFile * of)
 //审核预约
 void TeacherWindow::configValidOrder(OrderFile * of)
 {
-
-
-
 
             int index = 1;
             QString s;
@@ -233,12 +224,5 @@ void TeacherWindow::configValidOrder(OrderFile * of)
                 //当审核预约界面配置好以后,就可以让它显示出来了
                 ui->stackedWidget->setCurrentIndex(1);
 
-
-
             }
-
-
-
-
-
 }

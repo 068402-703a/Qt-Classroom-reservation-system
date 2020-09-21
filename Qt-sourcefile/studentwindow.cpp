@@ -136,10 +136,11 @@ void StudentWindow::applyOrder(Student* stu)
         }
         QString status="审核中";
         QString s= date + " "+ interval + " "+ stu->m_Name + " "+ QString::number(room) + " "+status;
-
+        QString success="预约成功";
         QFile ifs;
 
-         bool flag=false;
+         bool flag=false;//审查是否同一个学生申请了同一个时间段的同一个机房
+         bool flag1=false;//检查该时间段的该机房是否已被预约
          if(ifs.exists("order.txt"))
          {
              ifs.setFileName("order.txt");
@@ -158,7 +159,16 @@ void StudentWindow::applyOrder(Student* stu)
                   QTextStream in(&ifs);
                   while (!in.atEnd()) {
                       QString line = in.readLine();
-
+                      QStringList list = line.split(' ',QString::SkipEmptyParts);
+                      QString date1=list[0];  //日期
+                      QString interval1=list[1] ; //时间段
+                      QString room1 = list[3]; //机房编号
+                      QString status1=list[4];
+                      if(date1==date&&interval1==interval&&room1==QString::number(room)&&status1==success)
+                      {
+                          flag1=true;//如果发现该时间段该机房已被预约,就提示
+                          break;
+                      }
                       if(s==line)
                       {
                           flag=true;
@@ -172,7 +182,12 @@ void StudentWindow::applyOrder(Student* stu)
              QMessageBox msgBox;
              if(flag)
              {
-                 msgBox.setText("你已申请过相同的预约,无法再申请" );
+                 msgBox.setText("你已申请过相同的预约,无法再申请!!" );
+                 msgBox.exec();
+             }
+             else if(flag1)
+             {
+                 msgBox.setText("该时间段的该机房已被预约,请重新选择!!" );
                  msgBox.exec();
              }
              else
