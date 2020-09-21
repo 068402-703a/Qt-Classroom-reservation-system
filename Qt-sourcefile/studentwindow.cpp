@@ -63,8 +63,23 @@ StudentWindow::StudentWindow(Student* stu,QWidget *parent) :
     });
     //在学生主界面点击取消预约按钮去到取消预约的界面
     connect(ui->cancelpushButton,&QPushButton::clicked,[=](){
+        QMessageBox msgBox;
+        QFile ex;
 
-        configCancelOrder(of,stu);
+        if(!ex.exists("order.txt"))
+        {
+            msgBox.setIcon(QMessageBox::Information);
+            msgBox.setText("无预约记录");
+            msgBox.exec();
+        }
+        else
+        {
+            of = new OrderFile;
+            configCancelOrder(of,stu);
+
+        }
+
+
     });
     //在取消预约界面选择返回按钮就返回学生主界面
     connect(ui->cancelexitpushButton,&QPushButton::clicked,[=](){
@@ -161,7 +176,7 @@ void StudentWindow::applyOrder(Student* stu)
                  msgBox.exec();
              }
              else
-             j{
+             {
 
                  msgBox.setText("预约成功！请等待审核" );
                  msgBox.exec();
@@ -287,18 +302,6 @@ void StudentWindow::CancelOrder(OrderFile*of,Student* stu)
 //取消预约
 void StudentWindow::configCancelOrder( OrderFile  * of,Student* stu)
 {
-    QMessageBox msgBox;
-    QFile ex;
-
-    if(!ex.exists("order.txt"))
-    {
-        msgBox.setIcon(QMessageBox::Information);
-        msgBox.setText("无预约记录");
-        msgBox.exec();
-    }
-    else
-    {
-        of = new OrderFile;
 
 
           int index = 1;
@@ -325,6 +328,7 @@ void StudentWindow::configCancelOrder( OrderFile  * of,Student* stu)
 
           if(index==1)
           {
+              QMessageBox msgBox;
               msgBox.setIcon(QMessageBox::Information);
               msgBox.setText("无可以取消的预约记录");
               msgBox.exec();
@@ -333,12 +337,10 @@ void StudentWindow::configCancelOrder( OrderFile  * of,Student* stu)
           }
           else
           {
+              ui->textEdit->setReadOnly(true);
               //只有在有可以取消的预约记录情况下才显示页面
               ui->stackedWidget->setCurrentIndex(2);
           }
-
-
-    }
 
 
 
