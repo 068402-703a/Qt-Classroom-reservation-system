@@ -7,6 +7,7 @@
 #include <QInputDialog>
 #include <QPainter>
 #include <QPixmap>
+#include <QDebug>
 TeacherWindow::TeacherWindow(Teacher * tea,QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::TeacherWindow)
@@ -43,17 +44,31 @@ TeacherWindow::TeacherWindow(Teacher * tea,QWidget *parent) :
        ui->textEdit->clear();
 
     });
-
-    //连接审核预约界面的选择按钮
-
+     //连接审核预约界面的选择按钮
     connect(ui->choosepushButton,&QPushButton::clicked,[=](){
 
       ValidOrder(of);
     });
+
     //在学生主界面点击取消预约按钮去到取消预约的界面
     connect(ui->shenhepushButton,&QPushButton::clicked,[=](){
+        QFile ex;
+        QMessageBox msgBox;
+        if(!ex.exists("order.txt"))
+        {
+            msgBox.setIcon(QMessageBox::Information);
+            msgBox.setText("无预约记录");
+            msgBox.exec();
+        }else
+        {
+            of = new OrderFile;
+             configValidOrder(of);
+        }
 
-        configValidOrder(of);
+
+
+
+
     });
 
 }
@@ -114,6 +129,7 @@ void  TeacherWindow::showAllOrder(OrderFile * of)
 }
  void TeacherWindow::ValidOrder(OrderFile * of)
  {
+
       QVector<int>v; //存放在最大容器中的下标编号
       for (int i = 0; i < of->m_Size; i++)
       {
@@ -149,6 +165,7 @@ void  TeacherWindow::showAllOrder(OrderFile * of)
 
                  break;
            }
+
              of->updateOrder();
 
              msgBox.setText("审核完毕");
@@ -180,17 +197,7 @@ void  TeacherWindow::showAllOrder(OrderFile * of)
 //审核预约
 void TeacherWindow::configValidOrder(OrderFile * of)
 {
-    QFile ex;
-    QMessageBox msgBox;
-    if(!ex.exists("order.txt"))
-    {
-        msgBox.setIcon(QMessageBox::Information);
-        msgBox.setText("无预约记录");
-        msgBox.exec();
-    }
-    else
-    {
-        of = new OrderFile;
+
 
 
 
@@ -213,6 +220,7 @@ void TeacherWindow::configValidOrder(OrderFile * of)
             }
             if(index==1)
             {
+                QMessageBox msgBox;
                 msgBox.setIcon(QMessageBox::Information);
                 msgBox.setText("没有需要审核的预约记录");
                 msgBox.exec();
@@ -221,11 +229,15 @@ void TeacherWindow::configValidOrder(OrderFile * of)
             }
             else
             {
+                ui->textEdit->setReadOnly(true);
                 //当审核预约界面配置好以后,就可以让它显示出来了
                 ui->stackedWidget->setCurrentIndex(1);
+
+
+
             }
 
-    }
+
 
 
 
