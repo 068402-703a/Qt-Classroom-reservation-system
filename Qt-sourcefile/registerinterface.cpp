@@ -214,13 +214,13 @@ void RegisterInterface::LoginIn(QString fileName, int type)
 
                     msgBox.setText("老师验证登录成功！");
                     msgBox.exec();
-                    Teacher * tea = new Teacher(id, pwd);
+                   
                     //登录成功后就清空输入框中的内容
                     ui->tealineEdit->clear();
                     ui->teapasswordLineEdit2->clear();
                     this->hide();
                     //进入老师界面
-                    teaWindow=new TeacherWindow(tea);
+                    teaWindow=new TeacherWindow;
                     teaWindow->setGeometry(this->geometry());
                     teaWindow->show();
                     //监听从老师界面返回的信号
@@ -230,8 +230,7 @@ void RegisterInterface::LoginIn(QString fileName, int type)
                         this->show();
                        delete teaWindow;
                         teaWindow=NULL;
-                        delete tea;
-
+                       
                     });
 
                 } else //管理员身份成功登录
