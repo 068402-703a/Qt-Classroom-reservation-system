@@ -1,5 +1,6 @@
 # Qt-Classroom-reservation-system
 ## Qt-C++课程设计团队项目 
+### 1.1 基于Qt Creator 4.4.1开发
 ### 1.2 身份简介
 
 分别有三种身份使用该程序
